@@ -1,67 +1,34 @@
-// /*
-//  * Base Google Map example
-//  */
-// import React, {PropTypes, Component} from 'react';
-// import shouldPureComponentUpdate from 'react-pure-render/function';
-//
-// import GoogleMap from 'google-map-react';
-// import MyGreatPlace from './place';
-//
-// export default class SimpleMapPage extends Component {
-//   static propTypes = {
-//     center: PropTypes.array,
-//     zoom: PropTypes.number,
-//     greatPlaceCoords: PropTypes.any
-//   };
-//
-//   static defaultProps = {
-//     center: [59.938043, 30.337157],
-//     zoom: 9,
-//     greatPlaceCoords: {lat: 59.724465, lng: 30.080121}
-//   };
-//
-//   shouldComponentUpdate = shouldPureComponentUpdate;
-//
-//   constructor(props) {
-//     super(props);
-//   }
-//
-//   render() {
-//     return (
-//        <GoogleMap
-//          apiKey={'AIzaSyBSgxtifKGeavnr3ERjbf2htuWFDbHdHko'} // set if you need
-//         center={this.props.center}
-//         zoom={this.props.zoom}>
-//         <MyGreatPlace lat={59.955413} lng={30.337844} text={'A'} /* Kreyser Avrora */ />
-//         <MyGreatPlace {...this.props.greatPlaceCoords} text={'B'} /* road circle */ />
-//       </GoogleMap>
-//     );
-//   }
-// }
+import React, { Component } from "react"
+import { compose, withProps } from "recompose"
+import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 
-import React, { Component } from 'react';
-import GoogleMapReact from 'google-map-react';
+//Map component.
+const MyMapComponent = compose(
+  withProps({
+    googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyDK3r6_w9ix6QOqU-vIHIpsvVQ-IEkjvGU&v=3.exp&libraries=geometry,drawing,places",
+    loadingElement: <div style={{ height: `100%` }} />,
+    containerElement: <div style={{ height: `400px` }} />,
+    mapElement: <div style={{ height: `100%` }} />,
+  }),
+  withScriptjs,
+  withGoogleMap)((props)=>(
+    <GoogleMap
+      defaultZoom={8}
+      defaultCenter={{ lat: -34.397, lng: 150.644 }}
+    >
+      {true && <Marker position={{ lat: -34.397, lng: 150.644 }} onClick={() => {
+        console.log("HA")
+      }} />} </GoogleMap>
+  ))
 
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
-export default class SimpleMap extends Component {
-  static defaultProps = {
-    center: {lat: 59.95, lng: 30.33},
-    zoom: 11
-  };
+//Export the map component. 
+export default class MyFancyComponent extends Component {
 
   render() {
-    return (
-      <GoogleMapReact
-        defaultCenter={this.props.center}
-        defaultZoom={this.props.zoom}
-      >
-        <AnyReactComponent
-          lat={59.955413}
-          lng={30.337844}
-          text={'Kreyser Avrora'}
-        />
-      </GoogleMapReact>
-    );
+    return(
+      <MyMapComponent/>
+    )
+
   }
 }
