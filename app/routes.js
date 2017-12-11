@@ -15,6 +15,10 @@ import NotFound from 'components/not-found'
 //Import the map test
 import MapTest from './components/map-test'
 
+
+//Test out Redux
+import ReduxTest from './components/redux-test'
+
 // view components
 import HomeContainer from 'containers/home'
 import DifferentPageContainer from 'containers/different-page/different-page-container'
@@ -25,6 +29,7 @@ export default (
     <Route path="about" component={About}/>
     <Route path="map" component={MapTest}/>
     <Route path="different" component={DifferentPageContainer} />
+    <Route path="redux" component={ReduxTest} />
     <Route path="*" component={NotFound}/>
   </Route>
 )

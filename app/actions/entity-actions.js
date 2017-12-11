@@ -5,6 +5,17 @@
 export const REFRESH = 'REFRESH'
 export const UPDATE = 'UPDATE'
 export const DELETE = 'DELETE'
+export const INCREMENT = 'INCREMENT'
+
+//Change the Month and Year on the map - type
+export const CHANGE_MONTH_YEAR = 'CHANGE_MONTH_YEAR'
+
+//Change the day - type
+export const CHANGE_DAY = 'CHANGE_DAY'
+
+//Clicked a dot on the map.
+export const CLICKED_DOT = 'CLICKED_DOT'
+
 
 const wrap_action = (type, payload) => {
   return { type, payload }
