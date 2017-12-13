@@ -1,24 +1,23 @@
 import React, { Component } from "react"
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
-
-
+//Import the actions from the
+import { addIncrement, decrementNumber } from '../actions/counter-actions'
 
 
 
 //Export the map component.
-export default class MyFancyComponent extends Component {
+class MyFancyComponent extends Component {
 
   constructor(props){
     super(props);
 
-
-    this.state = {
-      counter : 0
-    }
-
-
 //    this.buttonClicked = this.buttonClicked.bind(this)
 
+  }
+
+  componentWillMount(){
 
   }
 
@@ -26,19 +25,39 @@ export default class MyFancyComponent extends Component {
   //Function when the button is clicked.
   buttonClicked(){
 
-    this.setState({
-      counter : this.state.counter + 1
-    })
+    this.props.addIncrement()
 
   }
 
   render() {
     return(
       <div>
-        <h1>Counter: {this.state.counter}</h1>
+        <h1>Counter: {this.props.myCounter} </h1>
         <button onClick={this.buttonClicked.bind(this)}>Redux</button>
       </div>
     )
 
   }
 }
+
+
+
+
+function mapStateToProps(state) {
+  return {
+    myCounter : state.counter
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    decrementNumber : decrementNumber,
+    addIncrement : addIncrement,
+  }, dispatch)
+}
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MyFancyComponent)

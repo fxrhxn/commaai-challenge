@@ -1,8 +1,14 @@
 import React, { Component } from "react"
 import { compose, withProps } from "recompose"
-import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
-
+import { withScriptjs, withGoogleMap, GoogleMap, Marker, Polyline } from "react-google-maps"
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 //import {February2017_1} from "../../server/data/cleaned-data/February2017"
+
+
+//Import the actions from the
+import { addIncrement, decrementNumber } from '../actions/counter-actions'
+
 
 
 //Map component.
@@ -22,19 +28,81 @@ const MyMapComponent = compose(
         mapTypeControl : false,
         fullscreenControl : false,
       }}
-      defaultCenter={{ lat: -34.397, lng: 150.644 }}
+      defaultCenter={{ lat: props.mapData.hover_area.lat, lng: props.mapData.hover_area.lon }}
     >
+
+    {props.data.map((dta, i) => {
+
+      if(i == 0){
+
+
+        return(
+
+      <Marker key={i} position={{ lat: props.data[0].lat, lng: props.data[0].lng}} draggable={true}/>
+
+        )
+
+
+      }else{
+
+        var previous_lat = props.data[i-1].lat
+        var previous_lng = props.data[i-1].lng
+
+        var connected_path = [
+          {lat : previous_lat, lng : previous_lng},
+          {lat : dta.lat, lng : dta.lng}
+        ]
+
+        return(
+
+    //  <Marker key={i} position={{ lat: dta.lat, lng: dta.lng}}>
+
+      <Polyline
+            path={connected_path}
+            visible={true}
+      />
+    //  </Marker>
+        )
+
+
+
+      }
+
+
+    })}
+
     </GoogleMap>
   ))
 
 
-//Export the map component.
-export default class MyFancyComponent extends Component {
 
+//Export the map component.
+class MyFancyComponent extends Component {
+
+  componentWillMount(){
+    console.log(this.props.mapData.data)
+  }
   render() {
     return(
-      <MyMapComponent/>
+      <MyMapComponent mapData={this.props.mapData} data={this.props.mapData.data}/>
     )
 
   }
 }
+
+
+function mapStateToProps(state) {
+  return {
+    mapData : state.mapData,
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({}, dispatch)
+}
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MyFancyComponent)

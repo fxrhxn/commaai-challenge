@@ -3,26 +3,45 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 
+
+
 import './nav-bar.less'
 
 var monthAndYears = ['July 2016', 'January 2017', 'February 2017', 'March 2017', 'April 2017', 'May 2017', 'June 2017', 'July 2017', 'August 2017', 'September 2017', 'October 2017']
 
-export default class NavBar extends Component {
+/* Import Actions for Redux */
+import { selectMonthYear, selectDay_sameMonth, selectDay_newMonth } from '../../actions/map-actions'
+
+class NavBar extends Component {
+
+    constructor(props){
+      super(props)
+
+
+    //  this.renderMonths = this.render.bind(this)
+    }
 
     //Bind all of the functions.
   //  this.renderMonths = this.renderMonths.bind(this);
+
 
     //Mounting function.
     componentWillMount(){
 
     }
 
+
+
+    //Render all of the months.
     renderMonths(){
 
-      monthAndYears.map((monthAndYear, i) => {
+    return this.props.mapData_default.map((monthAndYear, i) => {
         return(
 
-          <a className="dropdown-item" href="#">
+          <a key={i} className="dropdown-item" href="#" onClick={() => {
+            this.props.selectMonthYear(monthAndYear)
+            this.props.selectDayNewMonth("Test")
+          }}>
             {monthAndYear}
             <br/>
           </a>
@@ -58,7 +77,7 @@ export default class NavBar extends Component {
 
                             <div className="dropdown">
                               <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Change Month and Year
+                                {this.props.selectedMonth}
                               </button>
                               <div className="dropdown-menu" aria-labelledby="dropdownMenuButton" style={{ textAlign : 'center'}}>
                                 {this.renderMonths()}
@@ -71,18 +90,24 @@ export default class NavBar extends Component {
 
                             <div className="dropdown">
                               <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Change Day
+                                {this.props.selectedDay}
                               </button>
                               <div className="dropdown-menu" aria-labelledby="dropdownMenuButton" style={{ textAlign : 'center'}}>
-                                <a className="dropdown-item" href="#">
+                                <a className="dropdown-item" href="#" onClick={() => {
+                                  this.props.selectDaySameMonth("SAME MONTH")
+                                }}>
                                 August 2016
                                 </a>
                                   <br/>
-                                <a className="dropdown-item" href="#">
+                                <a className="dropdown-item" href="#" onClick={ () => {
+                                  this.props.selectDaySameMonth("SAME MONTH")
+                                }}>
                                 June 2017
                                 </a>
                                   <br/>
-                                <a className="dropdown-item" href="#">
+                                <a className="dropdown-item" href="#" onClick={() => {
+                                  this.props.selectDaySameMonth("SAME MONTH")
+                                }}>
                                 February 2011
                                 </a>
                               </div>
@@ -98,3 +123,27 @@ export default class NavBar extends Component {
     }
 
 }
+
+
+
+function mapStateToProps(state) {
+  return {
+    mapData_default : state.mapData_default,
+    selectedMonth : state.selectMonthYear,
+    selectedDay : state.selectDay
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    selectMonthYear : selectMonthYear,
+    selectDayNewMonth : selectDay_newMonth,
+    selectDaySameMonth : selectDay_sameMonth
+  }, dispatch)
+}
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NavBar)
