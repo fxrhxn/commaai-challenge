@@ -86,35 +86,6 @@ class NavBar extends Component {
 
                             </li>
 
-                            <li style={{ padding : 8}}>
-
-                            <div className="dropdown">
-                              <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                {this.props.selectedDay}
-                              </button>
-                              <div className="dropdown-menu" aria-labelledby="dropdownMenuButton" style={{ textAlign : 'center'}}>
-                                <a className="dropdown-item" href="#" onClick={() => {
-                                  this.props.selectDaySameMonth("SAME MONTH")
-                                }}>
-                                August 2016
-                                </a>
-                                  <br/>
-                                <a className="dropdown-item" href="#" onClick={ () => {
-                                  this.props.selectDaySameMonth("SAME MONTH")
-                                }}>
-                                June 2017
-                                </a>
-                                  <br/>
-                                <a className="dropdown-item" href="#" onClick={() => {
-                                  this.props.selectDaySameMonth("SAME MONTH")
-                                }}>
-                                February 2011
-                                </a>
-                              </div>
-                            </div>
-
-                            </li>
-
                         </ul>
                     </div>
                 </div>
@@ -130,6 +101,7 @@ function mapStateToProps(state) {
   return {
     mapData_default : state.mapData_default,
     selectedMonth : state.selectMonthYear,
+    tripData : state.tripData,
     selectedDay : state.selectDay
   }
 }

@@ -7,8 +7,7 @@ import { connect } from 'react-redux'
 
 
 //Import the actions from the
-import { addIncrement, decrementNumber } from '../actions/counter-actions'
-
+import { updateMarker } from '../actions/map-actions'
 
 
 //Map component.
@@ -31,45 +30,38 @@ const MyMapComponent = compose(
       defaultCenter={{ lat: props.mapData.hover_area.lat, lng: props.mapData.hover_area.lon }}
     >
 
-    {props.data.map((dta, i) => {
 
-      if(i == 0){
+    <Marker
+    position={{ lat: props.mapData.hover_area.lat, lng: props.mapData.hover_area.lon }}
+    onDragEnd={(e) => {
 
-
-        return(
-
-      <Marker key={i} position={{ lat: props.data[0].lat, lng: props.data[0].lng}} draggable={true}/>
-
-        )
+      //Set position back to starting.
+    //  console.log(e.latLng)
 
 
-      }else{
-
-        var previous_lat = props.data[i-1].lat
-        var previous_lng = props.data[i-1].lng
-
-        var connected_path = [
-          {lat : previous_lat, lng : previous_lng},
-          {lat : dta.lat, lng : dta.lng}
-        ]
-
-        return(
-
-    //  <Marker key={i} position={{ lat: dta.lat, lng: dta.lng}}>
-
-      <Polyline
-            path={connected_path}
-            visible={true}
-      />
-    //  </Marker>
-        )
+    //console.log(this.refs.myMarker.getPosition())
 
 
 
-      }
+      var test_lat = props.mapData.hover_area.lat
+      var test_lon = props.mapData.hover_area.lon
 
 
-    })}
+    //  this.refs.myMarker.setPosition(new google.maps.LatLng(test_lat, test_lon))
+    console.log(this.refs)
+      //console.log(this.refs.myMarker)
+
+
+    }}
+    onDrag={(e) => {
+
+
+
+    }}
+    draggable={true}
+    />
+
+    {props.children}
 
     </GoogleMap>
   ))
@@ -79,12 +71,77 @@ const MyMapComponent = compose(
 //Export the map component.
 class MyFancyComponent extends Component {
 
-  componentWillMount(){
-    console.log(this.props.mapData.data)
+
+
+  constructor(props){
+    super(props)
+
+
+    this.state = {
+      starting_lat : 0,
+      starting_lon : 0,
+    }
+
   }
+
+  componentWillMount(){
+
+    this.setState({
+      lat : this.props.mapData.data[0].lat,
+      lon : this.props.mapData.data[0].lng,
+    })
+
+  }
+
+
   render() {
     return(
-      <MyMapComponent mapData={this.props.mapData} data={this.props.mapData.data}/>
+      <MyMapComponent
+      mapData={this.props.mapData}
+      data={this.props.mapData.data}
+      markerLocation={this.props.marker_coordinates}
+      updateMarker={this.props.updateMarker}
+      >
+
+
+
+      {this.props.mapData.data.map((dta, i) => {
+
+        if(i == 0){
+
+          return
+
+
+        }else{
+
+          var previous_lat = this.props.mapData.data[i-1].lat
+          var previous_lng = this.props.mapData.data[i-1].lng
+
+          var connected_path = [
+            {lat : previous_lat, lng : previous_lng},
+            {lat : dta.lat, lng : dta.lng}
+          ]
+
+          return(
+
+      //  <Marker key={i} position={{ lat: dta.lat, lng: dta.lng}}>
+
+        <Polyline
+              key={i}
+              path={connected_path}
+              visible={true}
+        />
+      //  </Marker>
+          )
+
+
+
+        }
+
+
+      })}
+
+      </MyMapComponent>
     )
 
   }
@@ -94,11 +151,14 @@ class MyFancyComponent extends Component {
 function mapStateToProps(state) {
   return {
     mapData : state.mapData,
+    marker_coordinates : state.marker_coordinates,
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({}, dispatch)
+  return bindActionCreators({
+    updateMarker : updateMarker,
+  }, dispatch)
 }
 
 

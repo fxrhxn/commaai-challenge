@@ -14,7 +14,9 @@ import NotFound from 'components/not-found'
 
 //Import the map test
 import MapTest from './components/map-test'
-
+import MapTest2 from './components/map-test2'
+import MapScratch from './components/map/fromScratch'
+import MapScratch2 from './components/map/fromScratch2'
 
 //Test out Redux
 import ReduxTest from './components/redux-test'
@@ -27,7 +29,8 @@ export default (
   <Route path="/" component={AppContainer}>
     <IndexRoute component={HomeContainer}/>
     <Route path="about" component={About}/>
-    <Route path="map" component={MapTest}/>
+    <Route path="map" component={MapTest2}/>
+    <Route path="map2" component={MapScratch2}/>
     <Route path="different" component={DifferentPageContainer} />
     <Route path="redux" component={ReduxTest} />
     <Route path="*" component={NotFound}/>

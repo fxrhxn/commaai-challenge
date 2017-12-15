@@ -7,7 +7,11 @@ export const SELECT_MONTH_YEAR = 'SELECT_MONTH_YEAR'
 export const SELECT_DAY_SAME_MONTH = 'SELECT_DAY_SAME_MONTH'
 export const SELECT_DAY_NEW_MONTH = 'SELECT_DAY_NEW_MONTH'
 
+/* Marker Action Types */
+export const CHANGE_COORDINATES = 'CHANGE_COORDINATES'
 
+/* Update Map Action Types */
+export const UPDATE_MAP = 'UPDATE_MAP'
 
 //Action to select month and year.
 export function selectMonthYear(monthYear){
@@ -31,5 +35,20 @@ export function selectDay_newMonth(day){
   return{
     type : SELECT_DAY_NEW_MONTH,
     day : day,
+  }
+}
+
+//Action to update the map.
+export function updateMap(data){
+  return{
+    type : UPDATE_MAP,
+    data : data,
+  }
+}
+
+export function updateMarker(coords){
+  return{
+    type : CHANGE_COORDINATES,
+    coords : coords
   }
 }
