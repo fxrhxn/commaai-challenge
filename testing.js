@@ -97,10 +97,8 @@ function findCloseLat(lat){
   });
 
   var found_object = _.find(testingCoords, 'lat', closest);
-  console.log(found_object)
+
+  return found_object
 
 
 }
-
-
-findCloseLat(-36)

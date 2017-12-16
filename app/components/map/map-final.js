@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import axios from 'axios'
+
 //import {February2017_1} from "../../server/data/cleaned-data/February2017"
 
 
+import {changeSpeed} from '../../actions/map-actions'
 
 import test_data from '../../../server/data/trip-data/2016-07-02--11-56-24.json'
 
@@ -99,11 +102,17 @@ class MapTest extends Component {
 
     this.state = {
       speed : 0,
+      uuid : '2',
     }
 
   }
 
   componentDidMount(){
+    this.initMap()
+  }
+
+  initMap(){
+
     // Connect the initMap() function within this class to the global window context,
     // so Google Maps can invoke it
     //window.initMap = this.initMap;
@@ -145,9 +154,8 @@ class MapTest extends Component {
 
         var ui_data = _.find(this.props.mapData.coords, { lat : closest_Lat});
 
-        this.setState({
-          speed : ui_data.speed
-        })
+
+        this.props.changeSpeed(ui_data.speed)
 //        console.log(ui_data.speed)
         // var closest = counts.reduce(function(prev, curr) {
         //   return (Math.abs(curr - goal) < Math.abs(prev - goal) ? curr : prev);
@@ -203,31 +211,164 @@ line.setMap(this.map);
 
 
 
+
   }
 
-  initMap(){
+  loadMap(new_data, self){
+
+        // Connect the initMap() function within this class to the global window context,
+        // so Google Maps can invoke it
+        //window.initMap = this.initMap;
+
+        var padded_points_new = new Array(); //To store the padded array of points
+
+            this.map = new google.maps.Map(this.refs.map, {
+                 center: new google.maps.LatLng(new_data.coords[0].lat, new_data.coords[0].lng),
+                 zoom: 6,
+                 mapTypeId: google.maps.MapTypeId.ROADMAP
+             });
+
+             var latLng = new google.maps.LatLng(new_data.coords[0].lat, new_data.coords[0].lng);
+
+             var marker = new google.maps.Marker({
+                 position: latLng,
+                 map: this.map,
+                 draggable: true
+             });
 
 
-    this.map = new google.maps.Map(this.refs.map, {
-         center: new google.maps.LatLng(-36.86501268451408, 174.723858833313),
-         zoom: 16,
-         mapTypeId: google.maps.MapTypeId.ROADMAP
-     });
 
-     var latLng = new google.maps.LatLng(-36.8656740244478, 174.72489793784916);
-     var marker = new google.maps.Marker({
-         position: latLng,
-         map: map,
-         draggable: true
-     });
 
+          google.maps.event.addDomListener(marker, 'drag', (e) => {
+              marker.setPosition(find_closest_point_on_path(e.latLng,padded_points_new));
+
+
+            var closest_Lat = findCloseLat(e.latLng.lat(), new_data)
+
+
+
+            var ui_data = _.find(new_data.coords, { lat : closest_Lat});
+
+
+          //  this.props.changeSpeed(ui_data.speed)
+
+            console.log(ui_data.speed)
+
+            //
+            // this.setState({
+            //   speed : ui_data.speed
+            // })
+
+
+    //        console.log(ui_data.speed)
+            // var closest = counts.reduce(function(prev, curr) {
+            //   return (Math.abs(curr - goal) < Math.abs(prev - goal) ? curr : prev);
+            // });
+            //console.log(e.latLng.lng())
+          });
+
+
+          //Converted data to usable map array.
+          var converted_data = []
+
+          $.each(new_data.coords, function(key, cords){
+
+            converted_data.push(new google.maps.LatLng(cords.lat, cords.lng))
+
+          })
+
+
+          //Pad the points array
+          $.each(converted_data, function(key, pt) {
+              var current_point = pt;
+              var next_point = converted_data[key + 1];
+
+              //Check if we're on the last point
+              if (typeof next_point !== 'undefined') {
+
+                  //Get a 10th of the difference in latitude
+                  var lat_incr = (next_point.lat() - current_point.lat()) / 10;
+
+                  //Get a 10th of the difference in longitude
+                  var lng_incr = (next_point.lng() - current_point.lng()) / 10;
+
+                  //Add the current point to the new padded_points array
+                  padded_points_new.push(current_point);
+
+                  //Now add 10 points at lat_incr & lng_incr intervals between current and next points
+                  //We add this to the new padded_points array
+                  for (var i = 1; i <= 10; i++) {
+                      var new_pt = new google.maps.LatLng(current_point.lat() + (i * lat_incr), current_point.lng() + (i * lng_incr));
+                      padded_points_new.push(new_pt);
+                  }
+              }
+          });
+
+          var line = new google.maps.Polyline({
+        path: padded_points_new,
+        strokeColor: '#ff0000',
+        strokeOpacity: 1.0,
+        strokeWeight: 2
+    });
+
+    line.setMap(this.map);
+
+  }
+
+  checkForChanges(){
+
+    // var new_value;
+    // let previousvalue = this.props.mapData
+    // let new_value
+    // //this.props.mapData
+    // loadMap()
+
+
+
+    if(this.props.mapData.uuid != this.state.uuid){
+
+      // this.setState({
+      //   uuid : this.props.mapData.uuid
+      // })
+
+      var loct = this.props.mapData.location;
+
+      // console.log(String(loct))
+//'../../../server/data/trip-data/2016-07-03--12-37-25.json'
+
+  var url = 'http://localhost:3000/api/trip-data/'
+
+  axios.get(url + loct)
+  .then((data) => {
+
+    if(data.data == 'ERROR'){
+      return
+    }else{
+      this.loadMap(data.data, this)
+    }
+  })
+      //import neeww from testtt
+
+
+    }
+
+
+  }
+
+  clearMap(){
+    $('#mapDiv').empty()
   }
 
   render(){
+
+    this.checkForChanges()
     return(
       <div>
-          <div ref="map" style={{height : '500px', width : '500px'}}></div>
-          <h1>Speed: {this.state.speed}</h1>
+
+<h1 style={{ textAlign : 'center'}}>Speed: {this.props.speedData} mph</h1>
+          <div ref="map" id="mapDiv" style={{height : '666px', width : '100%'}}></div>
+
+
       </div>
     )
   }
@@ -303,11 +444,14 @@ function mapStateToProps(state) {
   return {
     tripData : state.tripData,
     mapData : state.mapData,
+    speedData : state.speedData,
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({}, dispatch)
+  return bindActionCreators({
+    changeSpeed : changeSpeed,
+  }, dispatch)
 }
 
 

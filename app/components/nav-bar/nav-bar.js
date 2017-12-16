@@ -10,7 +10,7 @@ import './nav-bar.less'
 var monthAndYears = ['July 2016', 'January 2017', 'February 2017', 'March 2017', 'April 2017', 'May 2017', 'June 2017', 'July 2017', 'August 2017', 'September 2017', 'October 2017']
 
 /* Import Actions for Redux */
-import { selectMonthYear, selectDay_sameMonth, selectDay_newMonth } from '../../actions/map-actions'
+import { selectMonthYear, selectDay_sameMonth, selectDay_newMonth, selectTrip } from '../../actions/map-actions'
 
 class NavBar extends Component {
 
@@ -35,14 +35,19 @@ class NavBar extends Component {
     //Render all of the months.
     renderMonths(){
 
-    return this.props.mapData_default.map((monthAndYear, i) => {
+    return this.props.mapData_default.map((dta, i) => {
         return(
 
           <a key={i} className="dropdown-item" href="#" onClick={() => {
-            this.props.selectMonthYear(monthAndYear)
-            this.props.selectDayNewMonth("Test")
+
+            var tripnum = dta.trip_number + 1
+
+            //Select the new month, so change the reducer for map data.
+            this.props.selectMonthYear("Trip " + String(tripnum))
+            this.props.selectTrip(dta)
+
           }}>
-            {monthAndYear}
+            Trip {dta.trip_number + 1}
             <br/>
           </a>
 
@@ -110,7 +115,8 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     selectMonthYear : selectMonthYear,
     selectDayNewMonth : selectDay_newMonth,
-    selectDaySameMonth : selectDay_sameMonth
+    selectDaySameMonth : selectDay_sameMonth,
+    selectTrip : selectTrip,
   }, dispatch)
 }
 

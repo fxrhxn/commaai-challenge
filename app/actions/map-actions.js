@@ -13,6 +13,12 @@ export const CHANGE_COORDINATES = 'CHANGE_COORDINATES'
 /* Update Map Action Types */
 export const UPDATE_MAP = 'UPDATE_MAP'
 
+/*Export constant for Trip Selected */
+export const TRIP_SELECTED = 'TRIP_SELECTED'
+
+
+export const SPEED_CHANGED = 'SPEED_CHANGED'
+
 //Action to select month and year.
 export function selectMonthYear(monthYear){
   return {
@@ -50,5 +56,19 @@ export function updateMarker(coords){
   return{
     type : CHANGE_COORDINATES,
     coords : coords
+  }
+}
+
+export function selectTrip(tripdata){
+  return{
+    type : TRIP_SELECTED,
+    tripdata : tripdata,
+  }
+}
+
+export function changeSpeed(speed){
+  return{
+    type : SPEED_CHANGED,
+    speed : speed,
   }
 }

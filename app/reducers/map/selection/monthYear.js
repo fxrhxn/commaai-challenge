@@ -4,7 +4,7 @@ import { SELECT_MONTH_YEAR } from '../../../actions/map-actions'
 
 
 /* Reducer for selecting a new month and year. */
-const select_month_and_year = (state = 'July 2016', action) => {
+const select_month_and_year = (state = 'Trip 1', action) => {
 
   switch (action.type) {
 

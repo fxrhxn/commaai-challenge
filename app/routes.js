@@ -25,11 +25,14 @@ import ReduxTest from './components/redux-test'
 import HomeContainer from 'containers/home'
 import DifferentPageContainer from 'containers/different-page/different-page-container'
 
+//Main Map
+import MainMap from './components/map/map-final'
+
 export default (
   <Route path="/" component={AppContainer}>
     <IndexRoute component={HomeContainer}/>
     <Route path="about" component={About}/>
-    <Route path="map" component={MapTest2}/>
+    <Route path="map" component={MainMap}/>
     <Route path="map2" component={MapScratch2}/>
     <Route path="different" component={DifferentPageContainer} />
     <Route path="redux" component={ReduxTest} />

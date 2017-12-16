@@ -27,7 +27,7 @@ var test_data = [{
     "dist": 1.1946123655563248,
      "index": 1
    }]
-   
+
 
 // allow cross-origin requests in dev mode
 if (process.env.APP_ENV !== 'production') {

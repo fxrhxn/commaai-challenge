@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux'
 import entities_reducer from './entities/entities-reducer'
 import counter_reducer from './counter'
+import speed_data from './speed'
 import { routerReducer } from 'react-router-redux'
 
 import mapData_default from './map/default_data';
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   mapData : mapData,
   marker_coordinates : marker_coordinates,
   tripData : tripData,
+  speedData : speed_data,
 })
 
 export default rootReducer
