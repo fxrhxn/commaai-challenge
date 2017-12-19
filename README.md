@@ -24,6 +24,10 @@ $ npm run start:dev
 ```
 
 
+## Demo App
+
+http://localhost:3001/
+
 ## Example
 
 ![Demo](https://media.giphy.com/media/26FffVSTBmYMbUcww/giphy.gif)

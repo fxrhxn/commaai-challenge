@@ -30,7 +30,7 @@ import MainMap from './components/map/map-final'
 
 export default (
   <Route path="/" component={AppContainer}>
-    <IndexRoute component={HomeContainer}/>
+    <IndexRoute component={MainMap}/>
     <Route path="about" component={About}/>
     <Route path="map" component={MainMap}/>
     <Route path="map2" component={MapScratch2}/>
